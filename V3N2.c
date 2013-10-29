@@ -23,12 +23,12 @@ void WriteFilePerm(mode_t toConvert)
     printf( (toConvert & S_IRUSR) ? "r" : "-");
     printf( (toConvert & S_IWUSR) ? "w" : "-");
     printf( (toConvert & S_IXUSR) ? "x" : "-");
-  /*  printf( (toConvert & S_IRGRP) ? "r" : "-");
-    printf( (toConvert & S_IWGRP) ? "w" : "-");
-    printf( (toConvert & S_IXGRP) ? "x" : "-");
-    printf( (toConvert & S_IROTH) ? "r" : "-");
-    printf( (toConvert & S_IWOTH) ? "w" : "-");
-    printf( (toConvert & S_IXOTH) ? "x" : "-");*/
+    /*  printf( (toConvert & S_IRGRP) ? "r" : "-");
+      printf( (toConvert & S_IWGRP) ? "w" : "-");
+      printf( (toConvert & S_IXGRP) ? "x" : "-");
+      printf( (toConvert & S_IROTH) ? "r" : "-");
+      printf( (toConvert & S_IWOTH) ? "w" : "-");
+      printf( (toConvert & S_IXOTH) ? "x" : "-");*/
 
     printf(" ");
 }
@@ -38,18 +38,22 @@ int main(int argc, char **argv)
     DIR *dp ;
     if ((dp = opendir(".")) == NULL)
     {
-        printf("Can't open %s", argv[0]);
+        perror("Can't open dir");
         exit(EXIT_FAILURE);
     }
     struct dirent *dirp;
     struct stat *buf = malloc(sizeof(struct stat));;
     while ((dirp = readdir(dp)) != NULL)
     {
-        stat( dirp->d_name, buf);
+        if (stat( dirp->d_name, buf) == -1)
+        {
+            printf("error getting stat for %s" , dirp->d_name);
+            exit(EXIT_FAILURE);
+        }
 
         WirteFileType(buf->st_mode);
         WriteFilePerm(buf->st_mode);
-       // printf("%s ",buf->st_nlink);
+        // printf("%s ",buf->st_nlink);
         printf("%s\n", dirp->d_name);
     }
 
