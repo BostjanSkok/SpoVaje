@@ -1,0 +1,4 @@
+test new line char 
+if it works 
+lorem ipsums didint
+jjj
